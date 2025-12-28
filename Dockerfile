@@ -1,11 +1,10 @@
 FROM python:3.11-slim
 
-# Sistem güncelleme ve tüm derleyicileri kur
+# Sistem güncelleme ve temel araçlar
 RUN apt-get update && apt-get install -y \
     wget curl git unzip xvfb \
     build-essential g++ mingw-w64 \
     golang-go \
-    software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
 # Multiarch etkinleştir ve wine32 + wine64 kur
@@ -26,7 +25,7 @@ RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
     rm dotnet-install.sh
 ENV PATH="/root/.dotnet:${PATH}"
 
-# Wine'ı başlat
+# Wine'ı başlat (ilk konfig için)
 RUN wineboot --init || true
 
 # Python paketleri
