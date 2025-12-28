@@ -62,13 +62,14 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
 
             try:
                 if language == "Python":
-                    pyi_args = ["pyinstaller", "--onefile", "--noconsole", "--distpath", temp_dir, source_path]
+                    # Wine ile gerçek Windows PyInstaller çalıştır
+                    pyi_args = ["wine", "pyinstaller", "--onefile", "--noconsole", "--distpath", temp_dir, source_path]
                     if icon_file:
                         icon_path = os.path.join(temp_dir, "icon.ico")
                         with open(icon_path, "wb") as f:
                             f.write(icon_file.getvalue())
                         pyi_args += ["--icon", icon_path]
-                    result = subprocess.run(pyi_args, capture_output=True, text=True, timeout=300)
+                    result = subprocess.run(pyi_args, capture_output=True, text=True, timeout=400)
 
                 elif language == "C++":
                     result = subprocess.run([
@@ -77,12 +78,32 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
 
                 elif language == "C#":
                     proj_dir = os.path.join(temp_dir, "csproj")
-                    os.makedirs(proj_dir)
-                    csproj = '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>true</SelfContained><PublishSingleFile>true</PublishSingleFile></PropertyGroup></Project>'
+                    os.makedirs(proj_dir, exist_ok=True)
+                    csproj_content = f'''<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+</Project>'''
                     with open(os.path.join(proj_dir, f"{filename}.csproj"), "w") as f:
-                        f.write(csproj)
+                        f.write(csproj_content)
                     shutil.copy(source_path, os.path.join(proj_dir, f"{filename}.cs"))
-                    result = subprocess.run(["dotnet", "publish", "-c", "Release", "-o", temp_dir], cwd=proj_dir, capture_output=True, text=True, timeout=180)
+                    if icon_file:
+                        icon_dest = os.path.join(proj_dir, "icon.ico")
+                        with open(icon_dest, "wb") as f:
+                            f.write(icon_file.getvalue())
+                        # .csproj'a icon ekle
+                        csproj_content = csproj_content.replace("</Project>", f"  <ItemGroup>\n    <None Include=\"icon.ico\" />\n  </ItemGroup>\n  <PropertyGroup>\n    <ApplicationIcon>icon.ico</ApplicationIcon>\n  </PropertyGroup>\n</Project>")
+                        with open(os.path.join(proj_dir, f"{filename}.csproj"), "w") as f:
+                            f.write(csproj_content)
+                    result = subprocess.run([
+                        "dotnet", "publish", "-c", "Release", "-r", "win-x64", "--self-contained", "true", "-p:PublishSingleFile=true", "-o", temp_dir
+                    ], cwd=proj_dir, capture_output=True, text=True, timeout=180)
 
                 elif language == "Go":
                     env = {**os.environ, "GOOS": "windows", "GOARCH": "amd64"}
@@ -93,7 +114,7 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
                 elif language == "Rust":
                     cargo_toml = f'[package]\nname = "{filename}"\nversion = "0.1.0"\nedition = "2021"\n\n[[bin]]\nname = "{filename}"\npath = "src/main.rs"'
                     src_dir = os.path.join(temp_dir, "src")
-                    os.makedirs(src_dir)
+                    os.makedirs(src_dir, exist_ok=True)
                     with open(os.path.join(temp_dir, "Cargo.toml"), "w") as f:
                         f.write(cargo_toml)
                     shutil.move(source_path, os.path.join(src_dir, "main.rs"))
@@ -102,6 +123,7 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
                     ], cwd=temp_dir, capture_output=True, text=True, timeout=240)
                     exe_path = os.path.join(temp_dir, "target", "x86_64-pc-windows-gnu", "release", f"{filename}.exe")
 
+                # EXE var mı kontrol et
                 if os.path.exists(exe_path):
                     success = True
                 else:
@@ -129,4 +151,4 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
                 if error_msg:
                     st.code(error_msg, language="text")
 
-st.caption("Made with ❤️ by Sad_Always — An AlexisHQ project | Multi-language → Real Windows EXE")
+st.caption("Made with ❤️ by Sad_Always — An AlexisHQ project | Multi-language → Windows EXE")
