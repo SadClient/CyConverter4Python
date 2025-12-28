@@ -46,7 +46,7 @@ if code is None:
     st.stop()
 
 if st.button("🚀 Build EXE & Download", type="primary", use_container_width=True):
-    with st.spinner("Building your Windows .exe — this may take 20-60 seconds 🔨"):
+    with st.spinner("Building your .exe — this may take 20-60 seconds 🔨"):
         with tempfile.TemporaryDirectory() as temp_dir:
             source_path = os.path.join(temp_dir, f"{filename}.py")
             with open(source_path, "w", encoding="utf-8") as f:
@@ -69,26 +69,20 @@ if st.button("🚀 Build EXE & Download", type="primary", use_container_width=Tr
                     st.stop()
                 st.success("✅ All packages installed successfully!")
 
-            # PyInstaller command - WINDOWS TARGET
+            # PyInstaller command (normal, no cross-compile)
             pyi_args = [
-                "pyinstaller", 
-                "--onefile", 
-                "--noconsole",
-                "--target-os=windows",      # ← BU YENİ
-                "--target-arch=x86_64",     # ← VE BU YENİ
+                "pyinstaller", "--onefile", "--noconsole",
                 "--name", filename,
                 "--distpath", temp_dir,
                 source_path
             ]
 
-            # Add icon if provided
             if icon_file:
                 icon_path = os.path.join(temp_dir, "icon.ico")
                 with open(icon_path, "wb") as f:
                     f.write(icon_file.getvalue())
                 pyi_args += ["--icon", icon_path]
 
-            # Add metadata
             version_file = os.path.join(temp_dir, "version_info.txt")
             version_content = f'''# UTF-8
 VSVersionInfo(
@@ -116,12 +110,12 @@ VSVersionInfo(
             if os.path.exists(exe_path):
                 with open(exe_path, "rb") as f:
                     exe_data = f.read()
-                st.success("✅ Your Windows .exe has been successfully built!")
+                st.success("✅ Your .exe has been successfully built!")
                 st.markdown(f"**Filename:** `{filename}.exe` | **Author:** `{final_author}`")
                 if requirements_file:
                     st.info("📦 All your packages are bundled inside the EXE!")
                 st.download_button(
-                    "📥 Download Your Windows EXE",
+                    "📥 Download Your EXE File",
                     exe_data,
                     file_name=f"{filename}.exe",
                     mime="application/octet-stream",
@@ -130,8 +124,7 @@ VSVersionInfo(
                 )
                 st.balloons()
             else:
-                st.error("❌ Build failed - Windows .exe could not be created")
+                st.error("❌ Build failed")
                 st.code(result.stderr or result.stdout)
-                st.info("💡 Tip: Make sure your code doesn't use Linux-specific features")
 
 st.caption("Made with ❤️ by Sad_Always — An AlexisHQ project | Python → Professional Windows EXE")
