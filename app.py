@@ -36,7 +36,7 @@ if option == "Upload File 📁":
         st.code(code, language=language.lower() if language != "C#" else "csharp")
 else:
     default_codes = {
-        "Python": 'print("Hello from CyConverter! 🚀")\nprint("This is a real Windows EXE!")',
+        "Python": 'print("Hello from CyConverter! 🚀")\nprint("Real Windows EXE!")',
         "C++": '#include <iostream>\nint main() {\n    std::cout << "Hello from CyConverter! 🚀" << std::endl;\n    return 0;\n}',
         "C#": 'using System;\nclass Program {\n    static void Main() {\n        Console.WriteLine("Hello from CyConverter! 🚀");\n    }\n}',
         "Go": 'package main\nimport "fmt"\nfunc main() {\n    fmt.Println("Hello from CyConverter! 🚀")\n}',
@@ -63,7 +63,6 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
 
             try:
                 if language == "Python":
-                    # Wine ile gerçek Windows PyInstaller
                     pyi_args = ["wine", "pyinstaller", "--onefile", "--noconsole", "--distpath", temp_dir, source_path]
                     if icon_file:
                         icon_path = os.path.join(temp_dir, "icon.ico")
@@ -108,7 +107,7 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
                     ], cwd=temp_dir, capture_output=True, text=True, timeout=240)
                     exe_path = os.path.join(temp_dir, "target", "x86_64-pc-windows-gnu", "release", f"{filename}.exe")
 
-                # EXE'yi çeşitli olası konumlarda ara
+                # EXE'yi her olası konumdan ara (Wine/PyInstaller farklı yerlere koyabiliyor)
                 possible_paths = [
                     os.path.join(temp_dir, "dist", f"{filename}.exe"),
                     os.path.join(temp_dir, "dist", filename),
