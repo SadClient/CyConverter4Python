@@ -1,56 +1,60 @@
-# 🚀 CyConverter4Python
+# 🚀 CyConverter
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Web_App-FF4B4B?logo=streamlit)
 ![Windows EXE](https://img.shields.io/badge/Target-Windows_EXE-0078D6?logo=windows)
 ![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)
 ![Status](https://img.shields.io/badge/Status-Live-success)
 
-**CyConverter4Python** turns your Python code into a professional standalone **Windows .exe** file — instantly in your browser!
+**CyConverter** is a web application that instantly converts your code from **Python • C++ • C# • Go • Rust** into a real **Windows .exe** file.
 
-Upload your .py file or paste code → add packages, icon, author → download ready-to-run EXE!
+Upload your source file or paste code → add icon & author → download ready-to-run Windows EXE!
 
 ---
 ## 🚀 Live Demo
-👉 **https://cyconverter4python.alexishq.site**
-(if not working, try)
-👉 **https://cyconverter4python.streamlit.app/**
+👉 **https://cyconverter.alexishq.site**  
+(if not working, try)  
+👉 **https://cyconverter.onrender.com**
+
 ---
 ## 🎬 Demo Preview (GIF)
 > Coming soon!
-![CyConverter4Python Demo](demo.gif)
+![CyConverter Demo](demo.gif)
+
 ---
 ## ✨ Features
-- 📁 Upload .py or paste code
-- 📦 Full **requirements.txt** support (tkinter, pygame, requests, pandas, selenium, etc.)
-- 🎨 Optional custom icon (.ico) & author name
-- 📋 Professional metadata (right-click → Properties → Details)
-- 🖥️ Clean EXE — no console window
-- 🌐 Works directly in browser — no installation needed
+- 📁 Upload file or paste code
+- 🎨 Optional custom icon (.ico) and author name
+- 📋 Professional metadata (Properties → Details)
+- 🌐 No installation needed — runs in browser
+- ⚡ Supports **Python** (with packages), **C++**, **C#**, **Go**, **Rust**
+- 🖥️ Real Windows .exe (not Linux binary)
+
 ---
 ## 🛠️ Tech Stack
-- **Python** — Core
 - **Streamlit** — Web interface
-- **PyInstaller** — EXE builder
+- **Docker + Wine** — Cross-compile for Windows .exe
+- **PyInstaller / g++ / dotnet / go / cargo** — Compilers
+
 ---
 ## 📸 Site Screenshot
-![CyConverter4Python Screenshot](https://raw.githubusercontent.com/Sad_Always/cyconverter4python/main/screenshot.png)
+![CyConverter Screenshot](screenshot.png)
+
 ---
-## ⚠️ Quick Note
+## ⚠️ Important Disclaimer
 - Only compile code **you trust**
-- Generated .exe files are created from your input
+- Generated .exe files are from user input
 - Use at your own risk
+
 ---
 ## 📄 License
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-Free to use, modify, distribute — even commercially!
+MIT License — free to use, modify, distribute
 
 ---
 ## 👨‍💻 Author
 Made with ❤️ by **Sad_Always**  
 An **AlexisHQ** project  
 🌐 https://alexishq.site
+
 ---
 ## ⭐ Support
-If you like this project, please **star the repository** ⭐  
-Your support means a lot!
+Like it? **Star the repository** ⭐
