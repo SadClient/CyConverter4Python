@@ -62,6 +62,7 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
             final_exe_path = None
 
             try:
+                exe_path = os.path.join(temp_dir, f"{filename}.exe")
                 if language == "Python":
                     pyi_args = ["wine", "pyinstaller", "--onefile", "--noconsole", "--distpath", temp_dir, source_path]
                     if icon_file:
@@ -72,7 +73,6 @@ if st.button("🚀 Build Windows EXE & Download", type="primary", use_container_
                     result = subprocess.run(pyi_args, capture_output=True, text=True, timeout=400)
 
                 elif language == "C++":
-                    exe_path = os.path.join(temp_dir, f"{filename}.exe")
                     result = subprocess.run([
                         "x86_64-w64-mingw32-g++", source_path, "-o", exe_path, "-static"
                     ], capture_output=True, text=True, timeout=60)
